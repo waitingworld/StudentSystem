@@ -7,7 +7,7 @@ import java.io.*;
 public class Server{
     Server(){
         try{
-            // create server 7920
+            // create server 7920 
             ServerSocket server= new ServerSocket(7920);
 
             while(true){
