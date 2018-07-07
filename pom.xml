@@ -5,7 +5,7 @@
     <artifactId>StudentSystem</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>shinan Maven Webapp</name>
+    <name>StudentSystem Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,7 +15,7 @@
         <spring.version>4.2.5.RELEASE</spring.version>
 
         <!-- mybatis版本号 -->
-        <mybatis.version>3.2.8</mybatis.version>
+        <mybatis.version>3.4.6</mybatis.version>
 
         <!-- mysql驱动版本号 -->
         <mysql-driver.version>8.0.11</mysql-driver.version>
@@ -172,18 +172,28 @@
             <version>2.8.0</version>
         </dependency>
 
+        <!--文件上传-->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.1</version>
         </dependency>
 
+        <!--Commons IO是针对开发IO流功能的工具类库。
+            主要包括六个区域：
+            工具类——使用静态方法执行共同任务
+            输入——用于InputStream和Reader实现
+            输出——用于OutputStream和Writer实现
+            过滤器——各种文件过滤器实现
+            比较器——各种文件的java.util.Comparator实现
+            文件监听器——监听文件系统事件的组件-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
         </dependency>
 
+        <!--Commons Codec提供了一些公共的编解码实现，比如Base64, Hex, MD5,Phonetic and URLs等等。-->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
@@ -191,6 +201,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>shinan</finalName>
+        <finalName>StudentSystem</finalName>
     </build>
 </project>
