@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gs.dao.MainDao">
+    <select id="getStudents" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+      SELECT t1.id,t1.code,if(t1.sex=1,"男","女") as sex ,t1.name,t1.use_flag,t1.birthday,t2.name as class_name,t2.profession_name
+      FROM student t1,class t2 where t1.class_id=t2.id ORDER BY t1.code
+    </select>
+    <select id="getClasssByName" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+      SELECT * FROM student_system_db.class where name =#{class_name};
+    </select>
+    <select id="getDisciplines" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+      SELECT * FROM student_system_db.discipline;
+    </select>
+    <select id="getScores" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+      SELECT t1.id,t2.code as student_code,
+          t3.code as discipline_code,
+          t3.name as discipline_name,
+          t2.name as student_name,
+          t1.score as score,
+          t1.credit as score_credit
+      FROM score t1,student t2,discipline t3
+      where t1.discipline_id = t3.id and t1.student_id = t2.id ORDER BY t2.code
+    </select>
+    <select id="count" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+      SELECT sum(t1.credit) as 'source' FROM score t1,discipline t2
+      where t1.student_id=#{id}
+      and t1.discipline_id = t2.id
+      <if test="startTime!=null and endTime!=null">
+          and t2.open_time between #{startTime} and #{endTime}
+      </if>
+    </select>
+
+    <select id="getStudentById" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        SELECT t1.id,t1.code,if(t1.sex=1,"男","女") as sex ,t1.name,t1.use_flag,t1.birthday,t2.name as class_name,t2.profession_name
+        FROM student t1,class t2 where t1.class_id=t2.id and t1.code=#{code}
+    </select>
+    <select id="getDisciplineById" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        SELECT * FROM student_system_db.discipline where code=#{code}
+    </select>
+    <select id="getScoreById" parameterType="com.alibaba.fastjson.JSONObject"
+            resultType="com.alibaba.fastjson.JSONObject">
+        SELECT t1.id,t2.code as student_code,
+          t3.code as discipline_code,
+          t3.name as discipline_name,
+          t2.name as student_name,
+          t1.score as score,
+          t1.credit as score_credit
+      FROM score t1,student t2,discipline t3
+      where t1.discipline_id = t3.id and t1.student_id = t2.id and t2.code=#{student_code} and t3.code =#{discipline_code}
+    </select>
+
+    <delete id="deleteStudents" parameterType="com.alibaba.fastjson.JSONObject">
+        DELETE FROM student WHERE id=#{id}
+    </delete>
+    <delete id="deleteDisciplines" parameterType="com.alibaba.fastjson.JSONObject">
+        DELETE FROM discipline WHERE id=#{id};
+    </delete>
+    <delete id="deleteScores" parameterType="com.alibaba.fastjson.JSONObject">
+        DELETE FROM score WHERE id=#{id};
+    </delete>
+    <delete id="deleteScoresByStudentId" parameterType="com.alibaba.fastjson.JSONObject">
+        DELETE FROM score WHERE student_id=#{id}
+    </delete>
+
+    <update id="updateStudents" parameterType="com.alibaba.fastjson.JSONObject">
+      UPDATE student set code=#{code},name=#{name},sex=#{sex},birthday=#{birthday},class_id=#{class_id}
+      where id=#{id}
+    </update>
+    <update id="updateDisciplines" parameterType="com.alibaba.fastjson.JSONObject">
+      UPDATE discipline set code=#{code},profession_name=#{profession_name},
+      name=#{name},type=#{type},open_time=#{open_time},period=#{period},credit=#{credit}
+      where id=#{id}
+    </update>
+    <update id="updateScores" parameterType="com.alibaba.fastjson.JSONObject">
+      UPDATE score set score=#{score} ,credit = #{score_credit} WHERE id=#{id}
+    </update>
+
+    <insert id="insertStudent" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO student (
+        id
+        <if test="code!=null">
+            ,code
+        </if>
+        <if test="name!=null">
+            ,name
+        </if>
+        <if test="sex!=null">
+            ,sex
+        </if>
+        <if test="birthday!=null">
+            ,birthday
+        </if>
+        <if test="class_id!=null">
+            ,class_id
+        </if>
+        ) VALUES (
+        #{id}
+        <if test="code!=null">
+            ,#{code}
+        </if>
+        <if test="name!=null">
+            ,#{name}
+        </if>
+        <if test="sex!=null">
+            ,#{sex}
+        </if>
+        <if test="birthday!=null">
+            ,#{birthday}
+        </if>
+        <if test="class_id!=null">
+            ,(SELECT id as 'class_id' from class where name=#{class_name})
+        </if>
+        )
+    </insert>
+    <insert id="insertDiscipline" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO discipline (
+        id
+        <if test="code!=null">
+            ,code
+        </if>
+        <if test="profession_name!=null">
+            ,profession_name
+        </if>
+        <if test="name!=null">
+            ,name
+        </if>
+        <if test="open_time!=null">
+            ,open_time
+        </if>
+        <if test="period!=null">
+            ,period
+        </if>
+        <if test="credit!=null">
+            ,credit
+        </if>
+        <if test="type!=null">
+            ,type
+        </if>
+        ) VALUES (
+        #{id}
+        <if test="code!=null">
+            ,#{code}
+        </if>
+        <if test="profession_name!=null">
+            ,#{profession_name}
+        </if>
+        <if test="name!=null">
+            ,#{name}
+        </if>
+        <if test="open_time!=null">
+            ,#{open_time}
+        </if>
+        <if test="period!=null">
+            ,#{period}
+        </if>
+        <if test="credit!=null">
+            ,#{credit}
+        </if>
+        <if test="type!=null">
+            ,#{type}
+        </if>
+        )
+    </insert>
+    <insert id="insertScore" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO score (
+        id,
+        discipline_id,
+        student_id,
+        score,
+        credit
+        ) VALUES (
+        #{id},
+        (SELECT id as 'discipline_id' from discipline where code=#{discipline_code}),
+        (SELECT id as 'student_id' from student where code=#{student_code}),
+        #{score},
+        #{score_credit}
+        )
+    </insert>
+</mapper>
